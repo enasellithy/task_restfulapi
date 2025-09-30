@@ -1,0 +1,959 @@
+{
+	"info": {
+		"_postman_id": "3bb2c3ff-df38-4def-a141-493666be3a0e",
+		"name": "rest IZAM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1732083"
+	},
+	"item": [
+		{
+			"name": "Auth Register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"enas\",\n    \"email\": \"enas@mail.com\",\n    \"password\": \"123456\",\n    \"password_confirm\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Auth Register",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"enas\",\n    \"email\": \"enas@mail.com\",\n    \"password\": \"123456\",\n    \"password_confirm\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/auth/register",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 00:37:48 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": false,\n    \"message\": \"The email has already been taken.\",\n    \"data\": null\n}"
+				}
+			]
+		},
+		{
+			"name": "Auth Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"enas@mail.com\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Auth Login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"enas@mail.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 00:44:08 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"token\": \"Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73\",\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"enas\",\n            \"email\": \"enas@mail.com\"\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "User Data",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8000/api/user",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "User Data",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/user",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 00:45:02 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"name\": \"enas\",\n    \"email\": \"enas@mail.com\",\n    \"email_verified_at\": null,\n    \"created_at\": \"2025-09-30T00:36:16.000000Z\",\n    \"updated_at\": \"2025-09-30T00:36:16.000000Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Invetory",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "localhost:8000/api/inventory?name=Laptop Dell 0&min_price=100&max_price=3000&warehouse_id=2&page=DLXPS13_0",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"inventory"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Laptop Dell 0"
+						},
+						{
+							"key": "min_price",
+							"value": "100"
+						},
+						{
+							"key": "max_price",
+							"value": "3000"
+						},
+						{
+							"key": "warehouse_id",
+							"value": "2"
+						},
+						{
+							"key": "page",
+							"value": "DLXPS13_0"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Invetory",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "localhost:8000/api/inventory?name=phone&min_price=100&max_price=500&warehouse_id=2&page=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventory"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "phone"
+								},
+								{
+									"key": "min_price",
+									"value": "100"
+								},
+								{
+									"key": "max_price",
+									"value": "500"
+								},
+								{
+									"key": "warehouse_id",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 01:18:27 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [],\n        \"first_page_url\": \"http://localhost:8000/api/inventory?page=1\",\n        \"from\": null,\n        \"last_page\": 1,\n        \"last_page_url\": \"http://localhost:8000/api/inventory?page=1\",\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/inventory?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"page\": null,\n                \"active\": false\n            }\n        ],\n        \"next_page_url\": null,\n        \"path\": \"http://localhost:8000/api/inventory\",\n        \"per_page\": 10,\n        \"prev_page_url\": null,\n        \"to\": null,\n        \"total\": 0\n    }\n}"
+				},
+				{
+					"name": "Get Invetory",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "localhost:8000/api/inventory?name=Laptop Dell 0&min_price=100&max_price=3000&warehouse_id=2&page=DLXPS13_0",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventory"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Laptop Dell 0"
+								},
+								{
+									"key": "min_price",
+									"value": "100"
+								},
+								{
+									"key": "max_price",
+									"value": "3000"
+								},
+								{
+									"key": "warehouse_id",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "DLXPS13_0"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 13:38:19 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [\n            {\n                \"id\": 12,\n                \"warehouse_id\": 2,\n                \"inventory_item_id\": 1,\n                \"quantity\": 95,\n                \"low_stock_threshold\": 11,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 1,\n                    \"name\": \"Laptop Dell 0\",\n                    \"sku\": \"DLXPS13_0\",\n                    \"description\": \"Description 0\",\n                    \"price\": \"1000.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                },\n                \"warehouse\": {\n                    \"id\": 2,\n                    \"name\": \"Alex  Center\",\n                    \"location\": \"Alexandria\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            }\n        ],\n        \"first_page_url\": \"http://localhost:8000/api/inventory?page=1\",\n        \"from\": 1,\n        \"last_page\": 1,\n        \"last_page_url\": \"http://localhost:8000/api/inventory?page=1\",\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/inventory?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"page\": null,\n                \"active\": false\n            }\n        ],\n        \"next_page_url\": null,\n        \"path\": \"http://localhost:8000/api/inventory\",\n        \"per_page\": 10,\n        \"prev_page_url\": null,\n        \"to\": 1,\n        \"total\": 1\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "inventory_transfer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"from_warehouse_id\": 1,\n    \"to_warehouse_id\": 2,\n    \"inventory_item_id\": 7,\n    \"quantity\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/inventory_transfer",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"inventory_transfer"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "inventory_transfer",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_warehouse_id\": 1,\n    \"to_warehouse_id\": 2,\n    \"inventory_item_id\": 7,\n    \"quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/inventory_transfer",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"inventory_transfer"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 13:10:03 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"from_warehouse_id\": 1,\n    \"to_warehouse_id\": 2,\n    \"inventory_item_id\": 7,\n    \"quantity\": 1,\n    \"status\": \"completed\",\n    \"updated_at\": \"2025-09-30T13:10:03.000000Z\",\n    \"created_at\": \"2025-09-30T13:10:03.000000Z\",\n    \"id\": 12\n}"
+				}
+			]
+		},
+		{
+			"name": "warehouse all",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8000/api/warehouse",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"warehouse"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "warehouse all",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/warehouse",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"warehouse"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 13:17:21 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [\n            {\n                \"id\": 1,\n                \"name\": \"Main Central Warehouse\",\n                \"location\": \"Cairo\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"Alex  Center\",\n                \"location\": \"Alexandria\"\n            }\n        ],\n        \"first_page_url\": \"http://localhost:8000/api/warehouse?page=1\",\n        \"from\": 1,\n        \"last_page\": 1,\n        \"last_page_url\": \"http://localhost:8000/api/warehouse?page=1\",\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/warehouse?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"page\": null,\n                \"active\": false\n            }\n        ],\n        \"next_page_url\": null,\n        \"path\": \"http://localhost:8000/api/warehouse\",\n        \"per_page\": 10,\n        \"prev_page_url\": null,\n        \"to\": 2,\n        \"total\": 2\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "warehouse show data",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8000/api/warehouse/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"warehouse",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "warehouse show data",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/warehouse/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"warehouse",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 13:21:02 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Main Central Warehouse\",\n        \"location\": \"Cairo\",\n        \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n        \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n        \"stocks\": [\n            {\n                \"id\": 1,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 1,\n                \"quantity\": 63,\n                \"low_stock_threshold\": 2,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 1,\n                    \"name\": \"Laptop Dell 0\",\n                    \"sku\": \"DLXPS13_0\",\n                    \"description\": \"Description 0\",\n                    \"price\": \"1000.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 2,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 2,\n                \"quantity\": 63,\n                \"low_stock_threshold\": 7,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 2,\n                    \"name\": \"Laptop Dell 1\",\n                    \"sku\": \"DLXPS13_1\",\n                    \"description\": \"Description 1\",\n                    \"price\": \"1001.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 3,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 3,\n                \"quantity\": 68,\n                \"low_stock_threshold\": 10,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 3,\n                    \"name\": \"Laptop Dell 2\",\n                    \"sku\": \"DLXPS13_2\",\n                    \"description\": \"Description 2\",\n                    \"price\": \"1002.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 4,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 4,\n                \"quantity\": 25,\n                \"low_stock_threshold\": 4,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 4,\n                    \"name\": \"Laptop Dell 3\",\n                    \"sku\": \"DLXPS13_3\",\n                    \"description\": \"Description 3\",\n                    \"price\": \"1003.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 5,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 5,\n                \"quantity\": 76,\n                \"low_stock_threshold\": 10,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 5,\n                    \"name\": \"Laptop Dell 4\",\n                    \"sku\": \"DLXPS13_4\",\n                    \"description\": \"Description 4\",\n                    \"price\": \"1004.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 6,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 6,\n                \"quantity\": 59,\n                \"low_stock_threshold\": 6,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 6,\n                    \"name\": \"Laptop Dell 5\",\n                    \"sku\": \"DLXPS13_5\",\n                    \"description\": \"Description 5\",\n                    \"price\": \"1005.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 7,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 7,\n                \"quantity\": 0,\n                \"low_stock_threshold\": 1,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T13:10:03.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 7,\n                    \"name\": \"Laptop Dell 6\",\n                    \"sku\": \"DLXPS13_6\",\n                    \"description\": \"Description 6\",\n                    \"price\": \"1006.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 8,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 8,\n                \"quantity\": 85,\n                \"low_stock_threshold\": 7,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 8,\n                    \"name\": \"Laptop Dell 7\",\n                    \"sku\": \"DLXPS13_7\",\n                    \"description\": \"Description 7\",\n                    \"price\": \"1007.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 9,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 9,\n                \"quantity\": 79,\n                \"low_stock_threshold\": 1,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 9,\n                    \"name\": \"Laptop Dell 8\",\n                    \"sku\": \"DLXPS13_8\",\n                    \"description\": \"Description 8\",\n                    \"price\": \"1008.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 10,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 10,\n                \"quantity\": 44,\n                \"low_stock_threshold\": 8,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 10,\n                    \"name\": \"Laptop Dell 9\",\n                    \"sku\": \"DLXPS13_9\",\n                    \"description\": \"Description 9\",\n                    \"price\": \"1009.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 11,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 11,\n                \"quantity\": 6,\n                \"low_stock_threshold\": 3,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 11,\n                    \"name\": \"Laptop Dell 10\",\n                    \"sku\": \"DLXPS13_10\",\n                    \"description\": \"Description 10\",\n                    \"price\": \"1010.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "warehouse/1/inventory",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8000/api/warehouse/1/inventory",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"warehouse",
+						"1",
+						"inventory"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "warehouse/1/inventory",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 2|nVtqKe5lpYw1ReCZZKyoQqf5ebmLYJWjqnFfPK7p4408cb73",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/warehouse/1/inventory",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"warehouse",
+								"1",
+								"inventory"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.24"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 30 Sep 2025 14:53:43 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Main Central Warehouse\",\n        \"location\": \"Cairo\",\n        \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n        \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n        \"stocks\": [\n            {\n                \"id\": 1,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 1,\n                \"quantity\": 63,\n                \"low_stock_threshold\": 2,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 1,\n                    \"name\": \"Laptop Dell 0\",\n                    \"sku\": \"DLXPS13_0\",\n                    \"description\": \"Description 0\",\n                    \"price\": \"1000.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 2,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 2,\n                \"quantity\": 63,\n                \"low_stock_threshold\": 7,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 2,\n                    \"name\": \"Laptop Dell 1\",\n                    \"sku\": \"DLXPS13_1\",\n                    \"description\": \"Description 1\",\n                    \"price\": \"1001.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 3,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 3,\n                \"quantity\": 68,\n                \"low_stock_threshold\": 10,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 3,\n                    \"name\": \"Laptop Dell 2\",\n                    \"sku\": \"DLXPS13_2\",\n                    \"description\": \"Description 2\",\n                    \"price\": \"1002.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 4,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 4,\n                \"quantity\": 25,\n                \"low_stock_threshold\": 4,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 4,\n                    \"name\": \"Laptop Dell 3\",\n                    \"sku\": \"DLXPS13_3\",\n                    \"description\": \"Description 3\",\n                    \"price\": \"1003.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 5,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 5,\n                \"quantity\": 76,\n                \"low_stock_threshold\": 10,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 5,\n                    \"name\": \"Laptop Dell 4\",\n                    \"sku\": \"DLXPS13_4\",\n                    \"description\": \"Description 4\",\n                    \"price\": \"1004.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 6,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 6,\n                \"quantity\": 59,\n                \"low_stock_threshold\": 6,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 6,\n                    \"name\": \"Laptop Dell 5\",\n                    \"sku\": \"DLXPS13_5\",\n                    \"description\": \"Description 5\",\n                    \"price\": \"1005.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 7,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 7,\n                \"quantity\": 0,\n                \"low_stock_threshold\": 1,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T13:10:03.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 7,\n                    \"name\": \"Laptop Dell 6\",\n                    \"sku\": \"DLXPS13_6\",\n                    \"description\": \"Description 6\",\n                    \"price\": \"1006.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 8,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 8,\n                \"quantity\": 85,\n                \"low_stock_threshold\": 7,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 8,\n                    \"name\": \"Laptop Dell 7\",\n                    \"sku\": \"DLXPS13_7\",\n                    \"description\": \"Description 7\",\n                    \"price\": \"1007.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 9,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 9,\n                \"quantity\": 79,\n                \"low_stock_threshold\": 1,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 9,\n                    \"name\": \"Laptop Dell 8\",\n                    \"sku\": \"DLXPS13_8\",\n                    \"description\": \"Description 8\",\n                    \"price\": \"1008.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 10,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 10,\n                \"quantity\": 44,\n                \"low_stock_threshold\": 8,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 10,\n                    \"name\": \"Laptop Dell 9\",\n                    \"sku\": \"DLXPS13_9\",\n                    \"description\": \"Description 9\",\n                    \"price\": \"1009.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            },\n            {\n                \"id\": 11,\n                \"warehouse_id\": 1,\n                \"inventory_item_id\": 11,\n                \"quantity\": 6,\n                \"low_stock_threshold\": 3,\n                \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"updated_at\": \"2025-09-30T12:28:25.000000Z\",\n                \"inventory_item\": {\n                    \"id\": 11,\n                    \"name\": \"Laptop Dell 10\",\n                    \"sku\": \"DLXPS13_10\",\n                    \"description\": \"Description 10\",\n                    \"price\": \"1010.00\",\n                    \"created_at\": \"2025-09-30T12:28:25.000000Z\",\n                    \"updated_at\": \"2025-09-30T12:28:25.000000Z\"\n                }\n            }\n        ]\n    }\n}"
+				}
+			]
+		}
+	]
+}
