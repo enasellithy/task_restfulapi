@@ -7,3 +7,4 @@ app/Models/Warehouse.php
 app/Models/InventoryItem.php
 app/Models/StockTransfer.php
 app/Models/User.php
+app/Models/Stock.php
