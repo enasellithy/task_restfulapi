@@ -1,12 +1,10 @@
 import os
 import requests
-import sys
 
 API_KEY = os.getenv("CEREBRAS_API_KEY")
 API_URL = "https://api.cerebras.ai/v1/chat/completions"
 
-# 1. حدد هنا المجلدات التي تريد فحصها فقط
-TARGET_DIRECTORIES = ["app/Http", "app/Solid"] 
+TARGET_DIRECTORIES = ["app", "src", "controllers", "models"]
 
 def ask_cerebras(prompt, code):
     if not API_KEY:
@@ -20,7 +18,7 @@ def ask_cerebras(prompt, code):
     payload = {
         "model": "llama3.1-8b",
         "messages": [
-            {"role": "system", "content": "You are a developer. Return ONLY code/markdown without explanations."},
+            {"role": "system", "content": "You are a senior developer. Return ONLY code or markdown. No talk or explanations."},
             {"role": "user", "content": f"{prompt}\n\nCode:\n{code}"}
         ],
         "temperature": 0
@@ -48,24 +46,39 @@ def save_file(path, content):
 
 def process_files():
     found_any = False
-    
-    # التأكد من وجود المجلدات المطلوبة قبل البدء
     valid_dirs = [d for d in TARGET_DIRECTORIES if os.path.exists(d)]
     
     if not valid_dirs:
-        print(f"⚠️ None of the target directories {TARGET_DIRECTORIES} were found!")
+        print(f"⚠️ Target directories {TARGET_DIRECTORIES} not found in {os.getcwd()}")
         return
 
-    print(f"🔍 Searching in: {valid_dirs}")
-    
     for target in valid_dirs:
         for root, _, files in os.walk(target):
             for file in files:
-                # تصفية الملفات حسب الامتداد
-                if file.endswith((".php", ".py", ".js", ".ts", ".java")):
+                if file.endswith((".php", ".py", ".js", ".ts")):
                     found_any = True
                     full_path = os.path.join(root, file)
                     print(f"📄 Processing: {full_path}")
                     
-                    with open(full_path, "r", encoding="utf-8") as f:
-                        source_code =
+                    try:
+                        with open(full_path, "r", encoding="utf-8") as f:
+                            source_code = f.read()
+                        
+                        if not source_code.strip():
+                            continue
+
+                        doc = ask_cerebras("Generate technical documentation in Markdown.", source_code)
+                        save_file(f"docs/ai_generated/{file}.md", doc)
+
+                        # 2. توليد Unit Test
+                        test = ask_cerebras("Generate a unit test for this code.", source_code)
+                        save_file(f"tests/AI_Generated/{file}_test.php", test)
+
+                    except Exception as e:
+                        print(f"❌ Error reading {file}: {e}")
+
+    if not found_any:
+        print("⚠️ No source files found to process.")
+
+if __name__ == "__main__":
+    process_files()
