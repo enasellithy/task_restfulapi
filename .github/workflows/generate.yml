@@ -1,20 +1,34 @@
-name: 📘 AI Selective Docs & Tests Generator (Cerebras - Split Files)
+name: 📘 AI Full Docs & Automation Tests (Cerebras)
 
 on:
   push:
     branches: [ main, dev1 ]
   workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Target Branch'
+        required: true
+        default: 'main'
+      run_mode:
+        description: 'Run Mode'
+        type: choice
+        options:
+          - full_suite
+          - docs_only
+          - tests_only
+        default: 'full_suite'
 
 permissions:
   contents: write
 
 jobs:
-  generate-docs-and-tests:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.inputs.target_branch || github.ref }}
           fetch-depth: 0
 
       - name: 💾 Persistent AI Cache
@@ -23,9 +37,7 @@ jobs:
           path: |
             .ai_docs_tracker.txt
             .ai_tests_tracker.txt
-          key: ai-docs-tests-cerebras-v1
-          restore-keys: |
-            ai-docs-tests-cerebras-
+          key: ai-cerebras-cache-v1
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
@@ -35,278 +47,22 @@ jobs:
       - name: 📦 Install Dependencies
         run: pip install requests
 
-      - name: 🤖 Run AI Documentation & Tests Generator (Cerebras)
+      - name: 🤖 Run Cerebras AI Generator
         env:
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          RUN_MODE: ${{ github.event.inputs.run_mode || 'full_suite' }}
+        run: python .github/scripts/ai_generator.py
+
+      - name: 📤 Commit & Push Changes
         run: |
-          python << 'EOF'
-          import os
-          import requests
-          import pathlib
-          import re
-          import json
-
-          # Configuration
-          CEREBRAS_API_KEY = os.getenv("CEREBRAS_API_KEY")
-          API_URL = "https://api.cerebras.ai/v1/chat/completions"
-          TRACKER_FILE = ".ai_docs_tracker.txt"
-          TESTS_TRACKER_FILE = ".ai_tests_tracker.txt"
-          DOCS_BASE_DIR = "docs/ai"
-          TESTS_BASE_DIR = "tests/Generated"
-          SELENIUM_TESTS_DIR = "tests/Selenium"
-          BATCH_LIMIT = 3  # Process 3 files per run to avoid rate limits
-
-          # Define specific directories to process
-          TARGET_PATHS = [
-              "app/Facades/",
-              "app/Features/PatientSatisfaction/",
-              "app/Features/ClinicUsers"
-          ]
-
-          def ask_cerebras(prompt, system_role="You are a senior PHP engineer and QA expert."):
-              """Call Cerebras API for code generation"""
-              if not CEREBRAS_API_KEY:
-                  print("❌ Missing CEREBRAS_API_KEY")
-                  return None
-
-              headers = {
-                  "Authorization": f"Bearer {CEREBRAS_API_KEY}",
-                  "Content-Type": "application/json"
-              }
-              data = {
-                  "model": "llama-3.3-70b",
-                  "messages": [
-                      {
-                          "role": "system",
-                          "content": system_role
-                      },
-                      {
-                          "role": "user",
-                          "content": prompt
-                      }
-                  ],
-                  "temperature": 0.1,
-                  "max_tokens": 4096
-              }
-
-              try:
-                  response = requests.post(API_URL, json=data, headers=headers, timeout=120)
-                  if response.status_code == 200:
-                      content = response.json()['choices'][0]['message']['content']
-                      return re.sub(r'```php|```', '', content).strip()
-                  else:
-                      print(f"⚠️ API Error: {response.status_code} - {response.text}")
-                      return None
-              except Exception as e:
-                  print(f"❌ Request Error: {e}")
-                  return None
-
-          def extract_functions(code):
-              """Extract function/method names from PHP code"""
-              pattern = r'(?:public|private|protected)?\s+(?:static\s+)?function\s+(\w+)\s*\('
-              return re.findall(pattern, code)
-
-          def generate_documentation(code, file_path):
-              """Generate markdown documentation"""
-              prompt = f"""Create technical documentation for this PHP file in Markdown format.
-              
-              Include:
-              1. **Purpose** - Brief description of what this class/file does
-              2. **Functions Table** - Create a markdown table with columns: Function Name, Parameters, Return Type, Description
-              3. **Key Features** - List main features
-              4. **Usage Example** - Show how to use main functions
-              
-              File Path: {file_path}
-              
-              Code:
-              {code[:3000]}
-              
-              Return ONLY the markdown content, no extra text."""
-              
-              return ask_cerebras(prompt)
-
-          def generate_unit_tests(code, file_path):
-              """Generate PHPUnit tests for all functions"""
-              functions = extract_functions(code)
-              if not functions:
-                  print(f"⚠️ No functions found in {file_path}")
-                  return None
-
-              prompt = f"""You are a senior PHP QA engineer. Generate a complete PHPUnit test class for this PHP file.
-
-              CRITICAL REQUIREMENTS:
-              1. Create at least ONE test method for EVERY function/method in the class
-              2. Test getters, setters, and business logic
-              3. Use Mockery for dependencies
-              4. Include setUp() and tearDown() methods
-              5. Use data providers where appropriate
-              6. Mock external dependencies
-              7. Test edge cases and exceptions
-              
-              Found Functions: {', '.join(functions)}
-              
-              Source Code:
-              {code}
-              
-              Return ONLY valid PHP code starting with <?php, no markdown formatting."""
-
-              system_role = "You are a senior PHP QA engineer. Generate PHPUnit tests for EVERY SINGLE function. Return ONLY pure PHP code."
-              return ask_cerebras(prompt, system_role)
-
-          def generate_selenium_tests(code, file_path):
-              """Generate Selenium/Dusk tests for UI controllers"""
-              prompt = f"""Generate Laravel Dusk (Selenium) tests for UI functionality in this PHP controller.
-
-              Requirements:
-              1. Create test methods for all public methods
-              2. Test form submissions and validations
-              3. Test page navigation and redirects
-              4. Use page object pattern
-              5. Include assertions for UI elements
-              6. Test error scenarios
-              
-              Controller Code:
-              {code[:2000]}
-              
-              Return ONLY valid PHP code starting with <?php namespace Tests\\Browser;"""
-
-              return ask_cerebras(prompt)
-
-          def generate_phpdoc(code, file_path):
-              """Add PHPDoc comments to all functions"""
-              prompt = f"""Add comprehensive PHPDoc comments to EVERY method in this PHP code.
-
-              Each method should have:
-              1. Brief description
-              2. @param tags for all parameters with types
-              3. @return tag with return type
-              4. @throws tags for exceptions
-              5. Example usage in PHPDoc if complex
-              
-              Return the COMPLETE PHP file with added PHPDoc, ready to save."""
-
-              return ask_cerebras(prompt)
-
-          # Load previously processed files
-          documented_files = set()
-          tested_files = set()
+          git config --global user.name 'Cerebras AI Bot'
+          git config --global user.email 'ai-bot@cerebras.ai'
           
-          if os.path.exists(TRACKER_FILE):
-              with open(TRACKER_FILE, 'r', encoding='utf-8') as f:
-                  documented_files = set(line.strip() for line in f)
-
-          if os.path.exists(TESTS_TRACKER_FILE):
-              with open(TESTS_TRACKER_FILE, 'r', encoding='utf-8') as f:
-                  tested_files = set(line.strip() for line in f)
-
-          # Collect all PHP files from target directories
-          all_selected_files = []
-          for target in TARGET_PATHS:
-              if os.path.isdir(target):
-                  for root, _, files in os.walk(target):
-                      for f in files:
-                          if f.endswith(".php"):
-                              all_selected_files.append(os.path.join(root, f))
-              elif os.path.isfile(target):
-                  all_selected_files.append(target)
-
-          processed_docs = []
-          processed_tests = []
-
-          for file_path in all_selected_files:
-              if len(processed_docs) >= BATCH_LIMIT and len(processed_tests) >= BATCH_LIMIT:
-                  print("⏸️ Batch limit reached, stopping processing")
-                  break
-
-              try:
-                  with open(file_path, 'r', encoding='utf-8') as f:
-                      code_content = f.read()
-
-                  # ============ GENERATE DOCUMENTATION ============
-                  if file_path not in documented_files and len(processed_docs) < BATCH_LIMIT:
-                      print(f"📚 Generating documentation for: {file_path}")
-                      docs = generate_documentation(code_content, file_path)
-                      
-                      if docs:
-                          doc_file_path = os.path.join(DOCS_BASE_DIR, os.path.splitext(file_path)[0] + ".md")
-                          os.makedirs(os.path.dirname(doc_file_path), exist_ok=True)
-                          
-                          with open(doc_file_path, 'w', encoding='utf-8') as f_doc:
-                              f_doc.write(f"# 📄 API Documentation: `{file_path}`\n\n")
-                              f_doc.write(docs)
-                              f_doc.write(f"\n\n---\n*Generated by Cerebras AI on 2026*")
-                          
-                          processed_docs.append(file_path)
-                          print(f"✅ Documentation created: {doc_file_path}")
-
-                  # ============ GENERATE UNIT TESTS ============
-                  if file_path not in tested_files and len(processed_tests) < BATCH_LIMIT:
-                      print(f"🧪 Generating unit tests for: {file_path}")
-                      unit_tests = generate_unit_tests(code_content, file_path)
-                      
-                      if unit_tests and "<?php" in unit_tests:
-                          test_filename = os.path.basename(file_path).replace(".php", "Test.php")
-                          test_path = os.path.join(TESTS_BASE_DIR, test_filename)
-                          os.makedirs(os.path.dirname(test_path), exist_ok=True)
-                          
-                          with open(test_path, 'w', encoding='utf-8') as f_test:
-                              f_test.write(unit_tests)
-                          
-                          processed_tests.append(file_path)
-                          print(f"✅ Unit tests created: {test_path}")
-
-                  # ============ GENERATE SELENIUM/DUSK TESTS ============
-                  if "Controller" in file_path and len(processed_tests) < BATCH_LIMIT:
-                      print(f"🌐 Generating Selenium tests for: {file_path}")
-                      selenium_tests = generate_selenium_tests(code_content, file_path)
-                      
-                      if selenium_tests and "<?php" in selenium_tests:
-                          test_filename = os.path.basename(file_path).replace(".php", "DuskTest.php")
-                          test_path = os.path.join(SELENIUM_TESTS_DIR, test_filename)
-                          os.makedirs(os.path.dirname(test_path), exist_ok=True)
-                          
-                          with open(test_path, 'w', encoding='utf-8') as f_test:
-                              f_test.write(selenium_tests)
-                          
-                          print(f"✅ Selenium tests created: {test_path}")
-
-                  # ============ ADD PHPDOC ============
-                  print(f"📝 Adding PHPDoc comments to: {file_path}")
-                  updated_code = generate_phpdoc(code_content, file_path)
-                  
-                  if updated_code and "<?php" in updated_code:
-                      with open(file_path, 'w', encoding='utf-8') as f:
-                          f.write(updated_code)
-                      print(f"✅ PHPDoc added to: {file_path}")
-
-              except Exception as e:
-                  print(f"❌ Error processing {file_path}: {e}")
-
-          # ============ UPDATE TRACKER FILES ============
-          if processed_docs:
-              with open(TRACKER_FILE, 'a', encoding='utf-8') as f:
-                  for f_path in processed_docs:
-                      f.write(f_path + "\n")
-
-          if processed_tests:
-              with open(TESTS_TRACKER_FILE, 'a', encoding='utf-8') as f:
-                  for f_path in processed_tests:
-                      f.write(f_path + "\n")
-
-          print(f"\n📊 Summary:")
-          print(f"   Documentation generated: {len(processed_docs)}")
-          print(f"   Tests generated: {len(processed_tests)}")
-          EOF
-
-      - name: 📤 Intelligent Push (Handles Conflicts)
-        run: |
-          git config --global user.name 'AI Docs Bot'
-          git config --global user.email 'ai-bot@bot.com'
-
-          git add docs/ai/ tests/Generated/ tests/Selenium/ .ai_docs_tracker.txt .ai_tests_tracker.txt
-
-          git commit -m "docs: AI docs & tests update via Cerebras [skip ci]" || exit 0
-
-          git pull --rebase origin ${{ github.ref_name }}
-
-          git push origin ${{ github.ref_name }}
+          mkdir -p docs/ai tests/Generated/Unit tests/Generated/Selenium
+          touch docs/ai/.gitkeep tests/Generated/Unit/.gitkeep tests/Generated/Selenium/.gitkeep
+          
+          git add .
+          
+          git commit -m "chore: AI generated docs & tests [skip ci]" || exit 0
+          
+          git push origin HEAD:${{ github.event.inputs.target_branch || github.ref_name }}
