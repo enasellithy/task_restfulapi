@@ -94,9 +94,13 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat: ai generated unit and selenium tests"
+          commit-message: "feat: add ai generated unit and selenium tests"
           branch: ai/generated-tests-${{ github.run_id }}
           delete-branch: true
           title: "🚀 AI Generated Tests"
-          body: "Automated PR with AI-generated tests and PHPDoc."
+          body: "Automated PR with AI-generated Unit Tests (covering all functions) and Selenium tests."
           base: ${{ github.event.inputs.target_branch }}
+          add-paths: |
+            tests/Unit/*.php
+            tests/Browser/*.php
+            app/**/*.php
