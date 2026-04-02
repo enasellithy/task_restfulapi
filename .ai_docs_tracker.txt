@@ -1,3 +1,6 @@
 app/Http/Controllers/Controller.php
 app/Http/Controllers/Api/V1/StockTransferController.php
 app/Http/Controllers/Api/V1/WarehouseController.php
+app/Http/Controllers/Api/V1/InventoryController.php
+app/Http/Controllers/Api/V1/Auth/AuthController.php
+app/Models/Warehouse.php
