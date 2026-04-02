@@ -1,9 +1,4 @@
 #!/usr/bin/env python3
-"""
-🤖 Cerebras AI Ultimate Generator 2026
-Tasks: Technical Docs + PHPUnit + Selenium (Dusk) + Source PHPDoc
-"""
-
 import os
 import requests
 import re
@@ -14,9 +9,7 @@ from datetime import datetime
 # ============ CONFIGURATION ============
 CEREBRAS_API_KEY = os.getenv("CEREBRAS_API_KEY")
 API_URL = "https://api.cerebras.ai/v1/chat/completions"
-
-# التعديل الجوهري هنا: استخدام الموديل الأكثر استقراراً ودعماً
-MODEL = "llama3.3-70b"
+MODEL = "llama3.1-70b"  # الموديل المستقر والمضمون
 
 DOCS_DIR = "docs/ai"
 UNIT_TESTS_DIR = "tests/Generated/Unit"
@@ -54,7 +47,7 @@ def ask_cerebras(prompt, system_role):
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.1,
-        "max_tokens": 4000
+        "max_tokens": 3000
     }
 
     try:
@@ -69,32 +62,24 @@ def ask_cerebras(prompt, system_role):
         log("ERROR", f"Request Exception: {str(e)}")
         return None
 
-# ============ TASK GENERATORS ============
+# ============ GENERATORS ============
 
 def generate_docs(code, path):
-    system = "You are a senior technical writer. Generate professional Markdown documentation."
-    prompt = f"Create technical MD documentation for: {path}\nInclude: Purpose, Functions Table, and Usage Example.\n\nCode:\n{code[:3500]}"
-    return ask_cerebras(prompt, system)
+    return ask_cerebras(f"Generate technical Markdown docs for: {path}\nCode:\n{code[:3000]}", "You are a technical writer.")
 
 def generate_unit_tests(code, path):
-    system = "You are a senior PHP QA Engineer. Generate pure PHPUnit code only."
-    prompt = f"Generate a complete PHPUnit test class for: {path}. Use Mockery. Return ONLY valid PHP starting with <?php."
-    return ask_cerebras(prompt, system)
+    return ask_cerebras(f"Generate PHPUnit test for: {path}. Return ONLY valid PHP.", "You are a QA Engineer.")
 
 def generate_selenium_tests(code, path):
-    system = "You are a Laravel Dusk (Selenium) expert. Generate browser tests."
-    prompt = f"Generate a Laravel Dusk test class for Controller: {path}. Return ONLY valid PHP starting with <?php."
-    return ask_cerebras(prompt, system)
+    return ask_cerebras(f"Generate Laravel Dusk test for Controller: {path}. Return ONLY valid PHP.", "You are a Selenium Expert.")
 
-def generate_phpdoc_version(code):
-    system = "You are a PHP standards expert. Add PHPDoc to every method and property."
-    prompt = f"Return the ENTIRE file content with full PHPDoc blocks added. Keep original logic identical.\n\nCode:\n{code}"
-    return ask_cerebras(prompt, system)
+def generate_phpdoc(code):
+    return ask_cerebras(f"Add full PHPDoc to this code. Return the ENTIRE file content.\nCode:\n{code}", "You are a PHP standards expert.")
 
-# ============ MAIN PROCESS ============
+# ============ MAIN ============
 
 def main():
-    log("INFO", f"🚀 Starting Cerebras AI Suite using model: {MODEL}")
+    log("INFO", f"🚀 Starting AI Suite with model: {MODEL}")
     
     for d in [DOCS_DIR, UNIT_TESTS_DIR, SELENIUM_TESTS_DIR]:
         os.makedirs(d, exist_ok=True)
@@ -106,66 +91,61 @@ def main():
 
     files_to_process = []
     for p in TARGET_PATHS:
-        if os.path.isdir(p):
-            for root, _, files in os.walk(p):
-                for f in files:
-                    if f.endswith(".php") and "Test" not in f:
-                        files_to_process.append(os.path.join(root, f))
-        elif os.path.isfile(p):
-            files_to_process.append(p)
+        if os.path.exists(p):
+            if os.path.isdir(p):
+                for root, _, files in os.walk(p):
+                    for f in files:
+                        if f.endswith(".php") and "Test" not in f:
+                            files_to_process.append(os.path.join(root, f))
+            else:
+                files_to_process.append(p)
 
     log("INFO", f"📂 Found {len(files_to_process)} candidate files.")
     
     batch_count = 0
     for file_path in files_to_process:
-        if file_path in processed:
+        if file_path in processed or batch_count >= 3:
             continue
-        
-        if batch_count >= 3:
-            log("INFO", "⏸️ Batch limit reached (3 files).")
-            break
 
         log("INFO", f"🛠️ Processing: {file_path}")
-        
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                original_code = f.read()
+                code = f.read()
 
             # 1. Docs
-            doc_md = generate_docs(original_code, file_path)
-            if doc_md:
+            res = generate_docs(code, file_path)
+            if res:
                 with open(os.path.join(DOCS_DIR, f"{pathlib.Path(file_path).stem}.md"), 'w') as f:
-                    f.write(doc_md)
+                    f.write(res)
 
             # 2. Unit Tests
-            u_test = generate_unit_tests(original_code, file_path)
-            if u_test and "<?php" in u_test:
+            res = generate_unit_tests(code, file_path)
+            if res and "<?php" in res:
                 with open(os.path.join(UNIT_TESTS_DIR, f"{pathlib.Path(file_path).stem}Test.php"), 'w') as f:
-                    f.write(u_test)
+                    f.write(res)
 
             # 3. Selenium
             if "Controller" in file_path:
-                s_test = generate_selenium_tests(original_code, file_path)
-                if s_test and "<?php" in s_test:
+                res = generate_selenium_tests(code, file_path)
+                if res and "<?php" in res:
                     with open(os.path.join(SELENIUM_TESTS_DIR, f"{pathlib.Path(file_path).stem}DuskTest.php"), 'w') as f:
-                        f.write(s_test)
+                        f.write(res)
 
-            # 4. In-place PHPDoc
-            updated_code = generate_phpdoc_version(original_code)
-            if updated_code and "<?php" in updated_code:
+            # 4. PHPDoc
+            res = generate_phpdoc(code)
+            if res and "<?php" in res:
                 with open(file_path, 'w') as f:
-                    f.write(updated_code)
-                log("SUCCESS", f"Processed: {file_path}")
+                    f.write(res)
 
             with open(TRACKER_FILE, 'a') as f:
                 f.write(f"{file_path}\n")
             
             batch_count += 1
-
+            log("SUCCESS", f"Finished {file_path}")
         except Exception as e:
             log("ERROR", f"Failed {file_path}: {e}")
 
-    log("INFO", "✅ Finished.")
+    log("INFO", "✅ Finished all tasks.")
 
 if __name__ == "__main__":
     main()
