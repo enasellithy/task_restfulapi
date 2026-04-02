@@ -12,7 +12,7 @@ def ask_cerebras(prompt):
         "Content-Type": "application/json"
     }
     data = {
-        "model": "llama3.1-70b",
+        "model": "llama-3.3-70b",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.2
     }
