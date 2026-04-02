@@ -48,22 +48,17 @@ jobs:
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
         run: python .github/scripts/generate_docs.py
 
-      # إعداد بيئة Selenium (Laravel Dusk)
       - name: Prepare for Selenium Tests
         run: |
           php artisan dusk:install || true
-          # ./vendor/laravel/dusk/bin/chromedriver-linux & 
 
       - name: Run Tests (Unit & Selenium)
         id: run-tests
         run: |
-          #  Unit Tests
           php artisan test --testsuite=Unit
-          
-          #  Selenium/Dusk Tests
           php artisan serve &
           sleep 5
-          php artisan dusk || echo "Dusk tests failed or not found"
+          php artisan dusk || echo "Dusk tests failed"
         continue-on-error: true
 
       - name: Open Issue on Test Failure
@@ -84,7 +79,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "docs: update generated functions and tests"
-          branch: main/generate_${{ github.run_id }}
+          branch: gen/docs_${{ github.run_id }}
           delete-branch: true
           title: "🚀 AI Generated Tools, Docs & Tests"
           body: |
