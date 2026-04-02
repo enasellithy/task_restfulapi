@@ -43,7 +43,7 @@ def process_files():
         if os.path.isdir(file_path) or "TestCase" in file_path: continue
         
         test_filename = os.path.basename(file_path).replace(".php", "Test.php")
-        test_path = os.path.join("tests/Unit", test_filename)
+        test_path = os.path.join(os.getcwd(), "tests/Unit", test_filename
 
         if os.path.exists(test_path) and os.path.getsize(test_path) > 100:
             print(f"⚠️ Skipping {file_path} - Test already exists.")
