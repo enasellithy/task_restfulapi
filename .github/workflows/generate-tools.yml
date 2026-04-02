@@ -46,7 +46,15 @@ jobs:
       - name: Run Cerebras Generator
         env:
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
-        run: python .github/scripts/generate_docs.py
+        run: |
+          mkdir -p tests/Unit
+          mkdir -p tests/Browser
+          python .github/scripts/generate_docs.py
+
+      - name: Verify Generated Tests
+        run: |
+          ls -R tests/Unit
+          ls -R tests/Browser || echo "No Browser tests generated"
 
       - name: Prepare for Selenium Tests
         run: |
@@ -55,7 +63,7 @@ jobs:
       - name: Run Tests (Unit & Selenium)
         id: run-tests
         run: |
-          php artisan test --testsuite=Unit
+          php artisan test
           php artisan serve &
           sleep 5
           php artisan dusk || echo "Dusk tests failed"
