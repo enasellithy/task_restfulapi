@@ -14,7 +14,7 @@ from datetime import datetime
 # ============ CONFIGURATION ============
 CEREBRAS_API_KEY = os.getenv("CEREBRAS_API_KEY")
 API_URL = "https://api.cerebras.ai/v1/chat/completions"
-MODEL = "llama-3.3-70b"
+MODEL = "llama3.3-70b"
 
 # Directories
 DOCS_DIR = "docs/ai"
