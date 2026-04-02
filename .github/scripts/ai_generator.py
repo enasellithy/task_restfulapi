@@ -61,7 +61,6 @@ def ask_cerebras(prompt, system_role):
         response = requests.post(API_URL, json=data, headers=headers, timeout=120)
         if response.status_code == 200:
             content = response.json()['choices'][0]['message']['content']
-            # Clean markdown code blocks if AI included them
             return re.sub(r'```php|```markdown|```', '', content).strip()
         else:
             log("ERROR", f"API Fail: {response.status_code} - {response.text}")
@@ -97,17 +96,14 @@ def generate_phpdoc_version(code):
 def main():
     log("INFO", "🚀 Starting Cerebras AI Generation Suite...")
     
-    # Ensure Directories exist
     for d in [DOCS_DIR, UNIT_TESTS_DIR, SELENIUM_TESTS_DIR]:
         os.makedirs(d, exist_ok=True)
 
-    # Load tracker
     processed = set()
     if os.path.exists(TRACKER_FILE):
         with open(TRACKER_FILE, 'r') as f:
             processed = set(line.strip() for line in f)
 
-    # Collect files
     files_to_process = []
     for p in TARGET_PATHS:
         if os.path.isdir(p):
@@ -121,7 +117,6 @@ def main():
     log("INFO", f"📂 Found {len(files_to_process)} candidate files.")
     
     batch_count = 0
-    # Limit to 3 files per run to stay within safe API/Time limits
     for file_path in files_to_process:
         if file_path in processed:
             continue
@@ -165,4 +160,18 @@ def main():
             updated_code = generate_phpdoc_version(original_code)
             if updated_code and "<?php" in updated_code:
                 with open(file_path, 'w') as f:
-                    f
+                    f.write(updated_code)
+                log("SUCCESS", "PHPDoc added to source file.")
+
+            with open(TRACKER_FILE, 'a') as f:
+                f.write(f"{file_path}\n")
+            
+            batch_count += 1
+
+        except Exception as e:
+            log("ERROR", f"Failed to process {file_path}: {e}")
+
+    log("INFO", "✅ All tasks finished.")
+
+if __name__ == "__main__":
+    main()
