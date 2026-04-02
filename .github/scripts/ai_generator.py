@@ -14,15 +14,15 @@ from datetime import datetime
 # ============ CONFIGURATION ============
 CEREBRAS_API_KEY = os.getenv("CEREBRAS_API_KEY")
 API_URL = "https://api.cerebras.ai/v1/chat/completions"
-MODEL = "gpt-oss-120b"
 
-# Directories
+# التعديل الجوهري هنا: استخدام الموديل الأكثر استقراراً ودعماً
+MODEL = "llama3.3-70b"
+
 DOCS_DIR = "docs/ai"
 UNIT_TESTS_DIR = "tests/Generated/Unit"
 SELENIUM_TESTS_DIR = "tests/Generated/Selenium"
 TRACKER_FILE = ".ai_docs_tracker.txt"
 
-# Target Folders in your Repo
 TARGET_PATHS = [
     "app/Facades/",
     "app/Features/PatientSatisfaction/",
@@ -73,28 +73,28 @@ def ask_cerebras(prompt, system_role):
 
 def generate_docs(code, path):
     system = "You are a senior technical writer. Generate professional Markdown documentation."
-    prompt = f"Create a technical MD documentation for this PHP file: {path}\nInclude: Purpose, Functions Table, and Usage Example.\n\nCode:\n{code[:3500]}"
+    prompt = f"Create technical MD documentation for: {path}\nInclude: Purpose, Functions Table, and Usage Example.\n\nCode:\n{code[:3500]}"
     return ask_cerebras(prompt, system)
 
 def generate_unit_tests(code, path):
     system = "You are a senior PHP QA Engineer. Generate pure PHPUnit code only."
-    prompt = f"Generate a complete PHPUnit test class for this file: {path}. Use Mockery, test all public methods, and edge cases. Return ONLY valid PHP starting with <?php."
+    prompt = f"Generate a complete PHPUnit test class for: {path}. Use Mockery. Return ONLY valid PHP starting with <?php."
     return ask_cerebras(prompt, system)
 
 def generate_selenium_tests(code, path):
     system = "You are a Laravel Dusk (Selenium) expert. Generate browser tests."
-    prompt = f"Generate a Laravel Dusk test class for this Controller: {path}. Focus on UI interactions and form submissions. Return ONLY valid PHP starting with <?php."
+    prompt = f"Generate a Laravel Dusk test class for Controller: {path}. Return ONLY valid PHP starting with <?php."
     return ask_cerebras(prompt, system)
 
 def generate_phpdoc_version(code):
     system = "You are a PHP standards expert. Add PHPDoc to every method and property."
-    prompt = f"Add full PHPDoc blocks (summary, @param, @return, @throws) to the following code. Return the ENTIRE file content with PHPDoc added. Keep original logic exactly the same.\n\nCode:\n{code}"
+    prompt = f"Return the ENTIRE file content with full PHPDoc blocks added. Keep original logic identical.\n\nCode:\n{code}"
     return ask_cerebras(prompt, system)
 
 # ============ MAIN PROCESS ============
 
 def main():
-    log("INFO", "🚀 Starting Cerebras AI Generation Suite...")
+    log("INFO", f"🚀 Starting Cerebras AI Suite using model: {MODEL}")
     
     for d in [DOCS_DIR, UNIT_TESTS_DIR, SELENIUM_TESTS_DIR]:
         os.makedirs(d, exist_ok=True)
@@ -122,7 +122,7 @@ def main():
             continue
         
         if batch_count >= 3:
-            log("INFO", "⏸️ Batch limit reached (3 files). Stopping.")
+            log("INFO", "⏸️ Batch limit reached (3 files).")
             break
 
         log("INFO", f"🛠️ Processing: {file_path}")
@@ -131,37 +131,31 @@ def main():
             with open(file_path, 'r', encoding='utf-8') as f:
                 original_code = f.read()
 
-            # 1. Documentation
+            # 1. Docs
             doc_md = generate_docs(original_code, file_path)
             if doc_md:
-                doc_file = os.path.join(DOCS_DIR, f"{pathlib.Path(file_path).stem}.md")
-                with open(doc_file, 'w') as f:
+                with open(os.path.join(DOCS_DIR, f"{pathlib.Path(file_path).stem}.md"), 'w') as f:
                     f.write(doc_md)
-                log("SUCCESS", f"Docs generated -> {doc_file}")
 
             # 2. Unit Tests
             u_test = generate_unit_tests(original_code, file_path)
             if u_test and "<?php" in u_test:
-                t_file = os.path.join(UNIT_TESTS_DIR, f"{pathlib.Path(file_path).stem}Test.php")
-                with open(t_file, 'w') as f:
+                with open(os.path.join(UNIT_TESTS_DIR, f"{pathlib.Path(file_path).stem}Test.php"), 'w') as f:
                     f.write(u_test)
-                log("SUCCESS", f"Unit Test generated -> {t_file}")
 
-            # 3. Selenium (Controllers only)
+            # 3. Selenium
             if "Controller" in file_path:
                 s_test = generate_selenium_tests(original_code, file_path)
                 if s_test and "<?php" in s_test:
-                    s_file = os.path.join(SELENIUM_TESTS_DIR, f"{pathlib.Path(file_path).stem}DuskTest.php")
-                    with open(s_file, 'w') as f:
+                    with open(os.path.join(SELENIUM_TESTS_DIR, f"{pathlib.Path(file_path).stem}DuskTest.php"), 'w') as f:
                         f.write(s_test)
-                    log("SUCCESS", f"Selenium Test generated -> {s_file}")
 
-            # 4. In-place PHPDoc Update
+            # 4. In-place PHPDoc
             updated_code = generate_phpdoc_version(original_code)
             if updated_code and "<?php" in updated_code:
                 with open(file_path, 'w') as f:
                     f.write(updated_code)
-                log("SUCCESS", "PHPDoc added to source file.")
+                log("SUCCESS", f"Processed: {file_path}")
 
             with open(TRACKER_FILE, 'a') as f:
                 f.write(f"{file_path}\n")
@@ -169,9 +163,9 @@ def main():
             batch_count += 1
 
         except Exception as e:
-            log("ERROR", f"Failed to process {file_path}: {e}")
+            log("ERROR", f"Failed {file_path}: {e}")
 
-    log("INFO", "✅ All tasks finished.")
+    log("INFO", "✅ Finished.")
 
 if __name__ == "__main__":
     main()
