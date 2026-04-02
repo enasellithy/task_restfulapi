@@ -39,6 +39,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: AI generated Unit Tests, Selenium & Docs"
+          committer: GitHub <noreply@github.com>
+          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           branch: ai-generated-updates-${{ github.event.inputs.target_branch }}
           title: "🤖 AI Updates: Tests & Documentation"
           body: |
@@ -48,3 +50,4 @@ jobs:
             - ✅ Technical Documentation
             - ✅ PHPDoc Updated in Source
           base: ${{ github.event.inputs.target_branch }}
+          delete-branch: true
