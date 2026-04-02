@@ -6,17 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       target_branch:
-        description: 'Target Branch'
+        description: 'Select Branch to process'
         required: true
         default: 'main'
-      run_mode:
-        description: 'Run Mode'
-        type: choice
-        options:
-          - full_suite
-          - docs_only
-          - tests_only
-        default: 'full_suite'
 
 permissions:
   contents: write
@@ -31,14 +23,6 @@ jobs:
           ref: ${{ github.event.inputs.target_branch || github.ref }}
           fetch-depth: 0
 
-      - name: 💾 Persistent AI Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .ai_docs_tracker.txt
-            .ai_tests_tracker.txt
-          key: ai-cerebras-cache-v1
-
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
@@ -50,7 +34,6 @@ jobs:
       - name: 🤖 Run Cerebras AI Generator
         env:
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
-          RUN_MODE: ${{ github.event.inputs.run_mode || 'full_suite' }}
         run: python .github/scripts/ai_generator.py
 
       - name: 📤 Commit & Push Changes
@@ -62,7 +45,6 @@ jobs:
           touch docs/ai/.gitkeep tests/Generated/Unit/.gitkeep tests/Generated/Selenium/.gitkeep
           
           git add .
-          
           git commit -m "chore: AI generated docs & tests [skip ci]" || exit 0
           
           git push origin HEAD:${{ github.event.inputs.target_branch || github.ref_name }}
